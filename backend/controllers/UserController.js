@@ -9,6 +9,8 @@ async function register(req, res) {
         const { name, phoneNumber,password } = req.body;
         const email = req.body.email.toLowerCase();
 
+        console.log(req.body);
+
         if (!name || !email || !phoneNumber || !password) {
             return res.status(400).json({ message: 'Missing required fields: name, email, or phone number or password' });
         }
@@ -22,7 +24,6 @@ async function register(req, res) {
 
         const user = new User({ name, email, phoneNumber, password:hash });
         await user.save();
-
         res.status(201).json({
             message: 'User created successfully',
             user: {

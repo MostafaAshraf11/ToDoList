@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./LoginRegister.css";
 import { FaUser, FaLock, FaEnvelope, FaPhone, FaUnlock } from "react-icons/fa";
+import { register } from "../../services/userService";
 
 const LoginRegister = () => {
   const [action, setAction] = useState("");
@@ -12,6 +13,18 @@ const LoginRegister = () => {
     name: "",
     phone: "",
   });
+
+  const handleRegisterClick = (e) => {
+    e.preventDefault();
+    var sendData = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      phoneNumber: user.phone,
+    };
+    const result = register(sendData);
+    console.log(result);
+  };
 
   const handleChange = (e) => {
     console.log(e);
@@ -58,9 +71,12 @@ const LoginRegister = () => {
           </div>
           <div className="input-box">
             <input
+              name="password"
+              value={user.password}
               type={isPasswordVisible ? "text" : "password"} // Toggle input type based on password visibility
               placeholder="Password"
               required
+              onChange={handleChange}
             />
             <span className="icon" onClick={togglePasswordVisibility}>
               {isPasswordVisible ? <FaUnlock /> : <FaLock />}
@@ -82,25 +98,45 @@ const LoginRegister = () => {
         <form action="">
           <h1>Registration</h1>
           <div className="input-box">
-            <input type="text" placeholder="name" required></input>
+            <input
+              name="name"
+              value={user.name}
+              type="text"
+              placeholder="name"
+              onChange={handleChange}
+              required
+            ></input>
             <FaUser className="icon" />
           </div>
           <div className="input-box">
-            <input type="email" placeholder="E-mail" required></input>
+            <input
+              name="email"
+              value={user.email}
+              type="email"
+              placeholder="E-mail"
+              onChange={handleChange}
+              required
+            ></input>
             <FaEnvelope className="icon" />
           </div>
 
           <div className="input-box">
             <input
+              name="phone"
+              value={user.phone}
               type="tel"
               placeholder="Phone Number"
               pattern="[0-9]*"
+              onChange={handleChange}
               required
             ></input>
             <FaPhone className="icon" />
           </div>
           <div className="input-box">
             <input
+              name="password"
+              value={user.password}
+              onChange={handleChange}
               type={isPasswordVisible ? "text" : "password"} // Toggle input type based on password visibility
               placeholder="Password"
               required
@@ -115,7 +151,9 @@ const LoginRegister = () => {
               conditions
             </label>
           </div>
-          <button type="submit">Register</button>
+          <button type="submit" onClick={handleRegisterClick}>
+            Register
+          </button>
           <div className="register-link">
             <p>
               Already have an account?{" "}
