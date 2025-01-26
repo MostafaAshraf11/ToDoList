@@ -10,7 +10,7 @@ const { authenticateUser } = require('../middleware/AuthenticateUser');
 
 router.post('/register', register);
 
-router.get('/login', login);
+router.post('/login', login);
 
 //router.get('/', getUserByEmail);
 router.put('/update', updateUser);

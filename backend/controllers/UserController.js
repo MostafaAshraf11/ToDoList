@@ -43,8 +43,13 @@ async function register(req, res) {
 
 async function login(req, res) {
     try {
+
+        console.log(req.body)
+
         const password = req.body.password;
         const email = req.body.email.toLowerCase();
+
+        console.log(email,password);
 
         const user = await User.findOne({ email });
         if (!user) {

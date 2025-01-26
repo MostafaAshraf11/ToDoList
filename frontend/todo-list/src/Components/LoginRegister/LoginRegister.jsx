@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./LoginRegister.css";
 import { FaUser, FaLock, FaEnvelope, FaPhone, FaUnlock } from "react-icons/fa";
-import { register } from "../../services/userService";
+import { register, login } from "../../services/userService";
+import { useNavigate } from "react-router-dom";
 
 const LoginRegister = () => {
   const [action, setAction] = useState("");
@@ -24,6 +25,29 @@ const LoginRegister = () => {
     };
     const result = register(sendData);
     console.log(result);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLoginClick = async (e) => {
+    e.preventDefault();
+
+    const sendData = {
+      email: user.email,
+      password: user.password,
+    };
+
+    try {
+      const res = await login(sendData);
+
+      if (res.token) {
+        //navigate("/dashboard");
+      } else {
+        console.log("Login failed: No token received");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   const handleChange = (e) => {
@@ -82,7 +106,9 @@ const LoginRegister = () => {
               {isPasswordVisible ? <FaUnlock /> : <FaLock />}
             </span>
           </div>
-          <button type="submit">Login</button>
+          <button type="submit" onClick={handleLoginClick}>
+            Login
+          </button>
           <div className="register-link">
             <p>
               Don't have an account?{" "}
