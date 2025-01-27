@@ -1,0 +1,112 @@
+.todoCard {
+    position: relative;
+    overflow: hidden;
+    background-color: #f0f0f0; /* Default background for pending status */
+    border: 1px solid hsla(0, 0%, 80%);
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+    padding: 20px;
+    margin: 10px;
+    text-align: center;
+    width: 300px;  /* Fixed width for all cards */
+    height: 350px; /* Fixed height for all cards */
+    display: inline-block;
+    transition: background-color 0.3s ease;
+  }
+  
+  .todoCard.completed {
+    background-color: #1fad79; /* Light green for completed status */
+  }
+  
+  .todoCard.pending {
+    background-color: #4342429d; /* Greyish color for pending status */
+  }
+  
+  .todoCard:hover {
+    transform: translateY(-5px);
+  }
+  
+  .cardHeader {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .icon {
+    color: white;
+    font-size: 1.5rem;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: color 0.3s ease; /* Smooth transition for color change */
+  }
+  
+  .icon:hover {
+    color: #ff4757; /* Default hover color for all icons */
+  }
+  
+  /* Specific hover color for the edit icon */
+  .cardHeader .icon:hover {
+    color: #f1c40f; /* Yellow color for edit icon */
+  }
+  
+  /* Specific hover color for the delete icon */
+  .cardHeader .icon.delete:hover {
+    color: #e74c3c; /* Red color for delete icon */
+  }
+  
+  .cardBody {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .inputField {
+    margin-bottom: 10px;
+  }
+  
+  .inputField label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #fff;
+    font-size: 0.9rem;
+  }
+  
+  .inputField input,
+  .inputField textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Apply border-radius of 8px */
+    font-size: 14px;
+    background-color: #2c2c2c;
+    color: #fff;
+  }
+  
+  .inputField textarea {
+    resize: vertical;
+    max-height: 150px; /* Limit max height of the textarea */
+    overflow-y: auto;  /* Enable scrolling if content exceeds max height */
+  }
+  
+  .statusButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    transition: color 0.2s;
+  }
+  
+  .statusButton:hover {
+    color: #ff4757;
+  }
+  
+  .todoCard:hover .statusButton {
+    color: #ff4757;
+  }
+  
+  
