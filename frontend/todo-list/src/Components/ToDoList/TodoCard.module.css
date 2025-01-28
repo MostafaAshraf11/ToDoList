@@ -1,7 +1,6 @@
 .todoCard {
     position: relative;
     overflow: hidden;
-    background-color: #f0f0f0; /* Default background for pending status */
     border: 1px solid hsla(0, 0%, 80%);
     border-radius: 20px;
     box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
@@ -12,18 +11,43 @@
     height: 350px; /* Fixed height for all cards */
     display: inline-block;
     transition: background-color 0.3s ease;
+    background-color: rgba(50,50,50,0.6);
+    backdrop-filter: blur(5px);
   }
   
-  .todoCard.completed {
-    background-color: #1fad79; /* Light green for completed status */
-  }
-  
-  .todoCard.pending {
-    background-color: #4342429d; /* Greyish color for pending status */
-  }
+
   
   .todoCard:hover {
     transform: translateY(-5px);
+  }
+  .cardHeaderContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .todoStatus{
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: 20px;
+  }
+  .todoStatus::before{
+    content: "";
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    border-radius: 8px;
+    left: -15px;
+    background-color: red;
+    
+  }
+  .todoStatus.completed::before {
+    background-color: #00a003; /* Light green for completed status */
+  }
+  
+  .todoStatus.pending::before {
+    background-color: #ff8400b7; /* Greyish color for pending status */
   }
   
   .cardHeader {
@@ -109,4 +133,14 @@
     color: #ff4757;
   }
   
+  .descriptioninputtext{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    width: 200px;
+    line-clamp: 1;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+  }
   

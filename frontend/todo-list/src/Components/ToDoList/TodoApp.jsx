@@ -18,6 +18,10 @@ const TodoApp = () => {
     const fetchData = async () => {
       try {
         const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
+        if (!userId || !token) {
+          navigate("/");
+        }
         const fetchData = { search: searchQuery, status: selectedFilters[0] };
         const res = await fetchTasksDetails(userId, fetchData);
         setTodos(res.tasks);
@@ -45,6 +49,9 @@ const TodoApp = () => {
 
   // Add a new todo as the first item in the list
   const handleAddTodo = () => {
+    if (todos.length != 0 && todos[0].isNew) {
+      return;
+    }
     const newTodo = {
       _id: Date.now(),
       title: "",
@@ -122,17 +129,18 @@ const TodoApp = () => {
         Add Task
       </button>
 
-      {/* Displaying filtered todo cards in a grid layout */}
-      <div className={styles.todosGrid}>
-        {todos.map((todo) => (
-          <TodoCard
-            key={todo._id}
-            card={todo}
-            onDelete={handleDelete}
-            onSave={handleSave}
-            isEditable={todo.isNew || false}
-          />
-        ))}
+      <div className={styles.todosContainer}>
+        <div className={styles.todosGrid}>
+          {todos?.map((todo) => (
+            <TodoCard
+              key={todo._id}
+              card={todo}
+              onDelete={handleDelete}
+              onSave={handleSave}
+              isEditable={todo.isNew || false}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

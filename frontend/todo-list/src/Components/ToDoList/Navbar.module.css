@@ -16,6 +16,7 @@
 }
 
 .navbar-links {
+  align-items: center;
   display: flex;
   gap: 2rem;
 }

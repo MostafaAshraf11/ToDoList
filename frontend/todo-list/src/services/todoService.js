@@ -38,7 +38,10 @@ export const fetchTasksDetails = async (
     }
   } catch (error) {
     console.error("Error fetching task details:", error.message);
-    throw new Error("Could not fetch task details. Please try again.");
+    return {
+      success: false,
+      message: "Could not fetch task details. Please try again.",
+    };
   }
 };
 
@@ -52,7 +55,7 @@ export const addTask = async (userId, taskData) => {
     return response.data;
   } catch (error) {
     console.error("Error adding task:", error.message);
-    throw new Error("Could not add task. Please try again.");
+    return { success: false, message: "Could not add task. Please try again." };
   }
 };
 
@@ -65,7 +68,10 @@ export const removeTask = async (userId, taskId) => {
     return response.data;
   } catch (error) {
     console.error("Error removing task:", error.message);
-    throw new Error("Could not remove task. Please try again.");
+    return {
+      success: false,
+      message: "Could not remove task. Please try again.",
+    };
   }
 };
 
@@ -75,12 +81,13 @@ export const updateTask = async (
   { title, description, status, dueDate }
 ) => {
   try {
-    console.log("input :", userId, taskId, {
+    console.log("input:", userId, taskId, {
       title,
       description,
       status,
       dueDate,
     });
+
     const url = "http://localhost:5000/task/edit";
 
     const body = {
@@ -96,13 +103,16 @@ export const updateTask = async (
 
     if (response.status === 200) {
       console.log("Task updated successfully:", response.data);
-      return response.data;
+      return response.data; // Successfully updated
+    } else if (response.status === 404) {
+      console.log("Task not found, no update necessary.");
+      return null;
     } else {
       console.error("Failed to update task:", response.statusText);
       return null;
     }
   } catch (error) {
     console.error("Error updating task:", error.message);
-    throw new Error("Could not update task. Please try again.");
+    return null;
   }
 };

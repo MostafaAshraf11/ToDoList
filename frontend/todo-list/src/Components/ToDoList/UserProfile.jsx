@@ -7,6 +7,8 @@ import {
   deleteUser,
   getUserDataById,
 } from "../../services/userService";
+import toast, { Toaster } from "react-hot-toast"; // Importing react-hot-toast
+
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState({
@@ -16,12 +18,17 @@ const UserProfile = () => {
     password: "*********", // Default value for password when in read-only mode
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+
+    const updatedValue =
+      name === "phoneNumber" ? value.replace(/\D/g, "") : value;
+
     setUser((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: updatedValue,
     }));
   };
 
@@ -32,70 +39,74 @@ const UserProfile = () => {
   const handleSaveClick = async () => {
     try {
       setIsEditing(false);
-  
+
       const userId = localStorage.getItem("userId");
-  
+
       if (!userId) {
-        console.error("User ID is not available in localStorage.");
+        toast.error("User ID is not available in localStorage.");
         return;
       }
-  
+
       const result = await updateUser(userId, user);
-  
+
       if (result.success) {
-        console.log("User updated successfully:", result.data);
-        // Optionally, update local state or UI with the new user data
+        toast.success("User updated successfully.");
+        fetchUserData();
       } else {
-        console.error("Error updating user:", result.error.message);
+        if (result.error.message !== "No change to the user.") {
+          toast.error("Error updating user: " + result.error.message);
+        }
+        fetchUserData();
       }
     } catch (error) {
       console.error("An unexpected error occurred:", error);
+      toast.error("An unexpected error occurred: " + error.message);
+
+      fetchUserData();
     }
   };
-  
-
-  const navigate = useNavigate();
 
   const handleDeleteClick = async () => {
     try {
       const userId = localStorage.getItem("userId");
-  
+
       if (!userId) {
-        console.error("User ID is not available in localStorage.");
+        toast.error("User ID is not available in localStorage.");
         return;
       }
-  
+
       const result = await deleteUser(userId);
-  
+
       if (result.success) {
-        console.log("User deleted successfully:", result.data);
+        toast.success("User deleted successfully.");
         navigate("/");
       } else {
-        console.error("Error deleting user:", result.error.message);
+        toast.error("Error deleting user: " + result.error.message);
       }
     } catch (error) {
       console.error("An unexpected error occurred:", error);
+      toast.error("An unexpected error occurred: " + error.message);
+    }
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+
+      if (!userId) {
+        navigate("/");
+        return;
+      }
+
+      const res = await getUserDataById(userId);
+      setUser({ ...res, password: "" });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      navigate("/");
     }
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
-
-        if (!userId) {
-          navigate('/');
-          return;
-        }
-
-        const res = await getUserDataById(userId);
-        setUser({ ...res, password: "" });
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        navigate('/');
-      }
-    };
-
     fetchUserData();
   }, []);
 
@@ -134,6 +145,7 @@ const UserProfile = () => {
               type="tel"
               placeholder="Phone Number"
               readOnly={!isEditing}
+              pattern="[0-9]*"
             />
             <FaPhone className={styles.icon} />
           </div>
@@ -169,6 +181,7 @@ const UserProfile = () => {
           </div>
         </form>
       </div>
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

@@ -38,7 +38,7 @@ async function register(req, res) {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "", error: error.message });
   }
 }
 
@@ -122,38 +122,81 @@ async function getUserById(req, res) {
 
 async function updateUser(req, res) {
   try {
-    const { name, email, phoneNumber } = req.body;
+    const { name, email, phoneNumber, password } = req.body;
     const id = req.query.id;
-    console.log(id, req.body);
 
-    if (email) {
-      const exists = await User.findOne({ email });
-      if (exists) {
-        if (exists._id != id) {
-          return res.status(400).json({ message: "User already exists" });
-        }
+    // Trim spaces from inputs
+    const trimmedName = name ? name.trim() : null;
+    const trimmedEmail = email ? email.trim() : null;
+    const trimmedPhoneNumber = phoneNumber ? phoneNumber.trim() : null;
+    const trimmedPassword = password ? password.trim() : null;
+
+    // Check if any required field is empty
+    if (!trimmedName || !trimmedEmail || !trimmedPhoneNumber) {
+      return res
+        .status(400)
+        .json({ message: "Cannot update with an empty field." });
+    }
+
+    // Validate the phoneNumber format using regex (only digits allowed)
+    const phoneRegex = /^[0-9]+$/;
+    if (trimmedPhoneNumber && !phoneRegex.test(trimmedPhoneNumber)) {
+      return res.status(400).json({ message: "Invalid phone number format." });
+    }
+
+    const existingUser = await User.findById(id);
+    if (!existingUser) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (
+      trimmedName === existingUser.name &&
+      trimmedEmail === existingUser.email &&
+      trimmedPhoneNumber === existingUser.phoneNumber &&
+      (!trimmedPassword || trimmedPassword === existingUser.password)
+    ) {
+      return res.status(400).json({ message: "No change to the user." });
+    }
+
+    const emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      return res.status(400).json({ message: "Invalid email format." });
+    }
+
+    if (trimmedEmail !== existingUser.email) {
+      const emailExists = await User.findOne({ email: trimmedEmail });
+      if (emailExists) {
+        return res.status(400).json({ message: "Email already exists." });
       }
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { name, email, phoneNumber },
-      { new: true }
-    );
+    const updateData = {};
+    if (trimmedName) updateData.name = trimmedName;
+    if (trimmedEmail) updateData.email = trimmedEmail;
+    if (trimmedPhoneNumber) updateData.phoneNumber = trimmedPhoneNumber;
+
+    if (trimmedPassword) {
+      const hashedPassword = await bcrypt.hash(trimmedPassword, 10);
+      updateData.password = hashedPassword;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
 
     if (!updatedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found." });
     }
 
     res.status(200).json({
-      message: "User updated successfully",
+      message: "User updated successfully.",
       user: updatedUser,
     });
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({
-      message: "Error updating user",
-      error: error.message || "Unknown error occurred",
+      message: "Error updating user.",
+      error: error.message || "Unknown error occurred.",
     });
   }
 }

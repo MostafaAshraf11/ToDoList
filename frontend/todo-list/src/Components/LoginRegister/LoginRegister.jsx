@@ -3,6 +3,7 @@ import styles from "./LoginRegister.module.css"; // Import the CSS Module
 import { FaUser, FaLock, FaEnvelope, FaPhone, FaUnlock } from "react-icons/fa";
 import { register, login } from "../../services/userService";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginRegister = () => {
   const [action, setAction] = useState("");
@@ -14,6 +15,8 @@ const LoginRegister = () => {
     name: "",
     phone: "",
   });
+
+  const navigate = useNavigate();
 
   const handleRegisterClick = async (e) => {
     e.preventDefault();
@@ -27,14 +30,12 @@ const LoginRegister = () => {
 
     try {
       const result = await register(sendData); // Await the register function
-      console.log(result);
+      toast.success("Registration successful!");
       loginLink();
     } catch (error) {
-      console.error("Error during registration:", error.message);
+      toast.error(`Registration failed: ${error.message}`);
     }
   };
-
-  const navigate = useNavigate();
 
   const handleLoginClick = async (e) => {
     e.preventDefault();
@@ -46,15 +47,15 @@ const LoginRegister = () => {
 
     try {
       const res = await login(sendData);
-      console.log(res);
 
       if (res.token) {
+        toast.success("Login successful!");
         navigate("/home");
       } else {
-        console.log("Login failed: No token received");
+        toast.error("Incorrect email or password");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      toast.error(`Login failed: ${error.message}`);
     }
   };
 
@@ -86,6 +87,7 @@ const LoginRegister = () => {
 
   return (
     <div className={styles.LoginRegisterContainer}>
+      <Toaster position="top-right" reverseOrder={false} />
       <div className={`${styles.wrapper} ${styles[action]}`}>
         <div className={styles["form-box"] + " " + styles.login}>
           <form action="">

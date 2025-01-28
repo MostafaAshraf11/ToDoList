@@ -120,14 +120,10 @@ async function searchTasks(req, res) {
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
 
-    const paginatedTasks = filteredTasks.slice(startIndex, endIndex);
-
     res.status(200).json({
       message: "Tasks retrieved successfully",
       totalTasks,
-      currentPage: page,
-      totalPages: Math.ceil(totalTasks / limit),
-      tasks: paginatedTasks,
+      tasks: filteredTasks,
     });
   } catch (error) {
     console.error("Error retrieving tasks:", error);
