@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./UserProfile.module.css";
+import { useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaPhone, FaLock } from "react-icons/fa";
 import {
   updateUser,
@@ -28,16 +29,53 @@ const UserProfile = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleSaveClick = () => {
-    setIsEditing(false);
-    const userId = localStorage.getItem("userId");
-
-    const res = updateUser(userId, user);
+  const handleSaveClick = async () => {
+    try {
+      setIsEditing(false);
+  
+      const userId = localStorage.getItem("userId");
+  
+      if (!userId) {
+        console.error("User ID is not available in localStorage.");
+        return;
+      }
+  
+      const result = await updateUser(userId, user);
+  
+      if (result.success) {
+        console.log("User updated successfully:", result.data);
+        // Optionally, update local state or UI with the new user data
+      } else {
+        console.error("Error updating user:", result.error.message);
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+    }
   };
+  
 
-  const handleDeleteClick = () => {
-    const userId = localStorage.getItem("userId");
-    const res = deleteUser(userId);
+  const navigate = useNavigate();
+
+  const handleDeleteClick = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+  
+      if (!userId) {
+        console.error("User ID is not available in localStorage.");
+        return;
+      }
+  
+      const result = await deleteUser(userId);
+  
+      if (result.success) {
+        console.log("User deleted successfully:", result.data);
+        navigate("/");
+      } else {
+        console.error("Error deleting user:", result.error.message);
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+    }
   };
 
   useEffect(() => {
@@ -47,6 +85,7 @@ const UserProfile = () => {
 
         if (!userId) {
           console.error("No user ID found in localStorage");
+          navigate('/');
           return;
         }
 
