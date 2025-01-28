@@ -54,7 +54,6 @@ export const updateUser = async (userId, userData) => {
   }
 };
 
-
 export const deleteUser = async (userId) => {
   try {
     const token = localStorage.getItem("token");
@@ -63,7 +62,6 @@ export const deleteUser = async (userId) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
 
     if (userId === localStorage.getItem("userId")) {
       localStorage.removeItem("token");
@@ -94,13 +92,12 @@ export async function getUserDataById(id) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Fetched user data:", response.data);
-    return response.data; // Return the fetched user data
+    return response.data;
   } catch (error) {
     console.error(
       "Error fetching user:",
       error.response?.data?.message || error.message
     );
-    throw error; // Rethrow the error for further handling
+    throw error;
   }
 }

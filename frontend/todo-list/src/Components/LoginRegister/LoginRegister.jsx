@@ -181,12 +181,6 @@ const LoginRegister = () => {
                 {isPasswordVisible ? <FaUnlock /> : <FaLock />}
               </span>
             </div>
-            <div className={styles["terms-conditions"]}>
-              <label>
-                <input type="checkbox" required />I accept the terms &
-                conditions
-              </label>
-            </div>
             <button type="submit" onClick={handleRegisterClick}>
               Register
             </button>

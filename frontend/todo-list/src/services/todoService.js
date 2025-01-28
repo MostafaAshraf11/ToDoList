@@ -30,14 +30,11 @@ export const fetchTasksDetails = async (
     });
 
     if (response.status === 200) {
-      console.log("Tasks retrieved successfully:", response.data);
       return response.data;
     } else {
-      console.error("Failed to retrieve tasks:", response.statusText);
       return null;
     }
   } catch (error) {
-    console.error("Error fetching task details:", error.message);
     return {
       success: false,
       message: "Could not fetch task details. Please try again.",
@@ -51,10 +48,8 @@ export const addTask = async (userId, taskData) => {
       `http://localhost:5000/task/add?id=${userId}`,
       taskData
     );
-    console.log("Task added successfully:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error adding task:", error.message);
     return { success: false, message: "Could not add task. Please try again." };
   }
 };
@@ -64,10 +59,8 @@ export const removeTask = async (userId, taskId) => {
     const response = await axios.delete(`http://localhost:5000/task/remove`, {
       data: { id: userId, taskId },
     });
-    console.log("Task removed successfully:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error removing task:", error.message);
     return {
       success: false,
       message: "Could not remove task. Please try again.",
@@ -102,17 +95,13 @@ export const updateTask = async (
     const response = await axios.put(url, body);
 
     if (response.status === 200) {
-      console.log("Task updated successfully:", response.data);
       return response.data; // Successfully updated
     } else if (response.status === 404) {
-      console.log("Task not found, no update necessary.");
       return null;
     } else {
-      console.error("Failed to update task:", response.statusText);
       return null;
     }
   } catch (error) {
-    console.error("Error updating task:", error.message);
     return null;
   }
 };

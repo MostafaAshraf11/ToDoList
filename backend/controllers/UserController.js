@@ -7,8 +7,6 @@ async function register(req, res) {
     const { name, phoneNumber, password } = req.body;
     const email = req.body.email.toLowerCase();
 
-    console.log(req.body);
-
     if (!name || !email || !phoneNumber || !password) {
       return res.status(400).json({
         message:
@@ -37,19 +35,14 @@ async function register(req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "", error: error.message });
   }
 }
 
 async function login(req, res) {
   try {
-    console.log(req.body);
-
     const password = req.body.password;
     const email = req.body.email.toLowerCase();
-
-    console.log(email, password);
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -74,7 +67,6 @@ async function login(req, res) {
       },
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 }
@@ -89,7 +81,6 @@ async function getUserByEmail(req, res) {
 
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error fetching user by email:", error);
     res.status(500).json({
       message: "Error fetching user",
       error: error.message || "Unknown error occurred",
@@ -100,7 +91,6 @@ async function getUserByEmail(req, res) {
 async function getUserById(req, res) {
   try {
     const id = req.query.id;
-    console.log(id);
 
     const user = await User.findById(id);
 
@@ -112,7 +102,6 @@ async function getUserById(req, res) {
 
     res.status(200).json({ name, email, phoneNumber });
   } catch (error) {
-    console.error("Error fetching user by ID:", error);
     res.status(500).json({
       message: "Error fetching user",
       error: error.message || "Unknown error occurred",
@@ -193,7 +182,6 @@ async function updateUser(req, res) {
       user: updatedUser,
     });
   } catch (error) {
-    console.error("Error updating user:", error);
     res.status(500).json({
       message: "Error updating user.",
       error: error.message || "Unknown error occurred.",
@@ -216,7 +204,6 @@ async function deleteUser(req, res) {
       user: user,
     });
   } catch (error) {
-    console.error("Error deleting user:", error);
     res.status(500).json({
       message: "Error deleting user",
       error: error.message || "Unknown error occurred",

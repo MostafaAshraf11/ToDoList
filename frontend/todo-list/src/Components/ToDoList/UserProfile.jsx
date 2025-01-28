@@ -59,7 +59,6 @@ const UserProfile = () => {
         fetchUserData();
       }
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
       toast.error("An unexpected error occurred: " + error.message);
 
       fetchUserData();
@@ -84,7 +83,6 @@ const UserProfile = () => {
         toast.error("Error deleting user: " + result.error.message);
       }
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
       toast.error("An unexpected error occurred: " + error.message);
     }
   };
@@ -101,7 +99,6 @@ const UserProfile = () => {
       const res = await getUserDataById(userId);
       setUser({ ...res, password: "" });
     } catch (error) {
-      console.error("Error fetching user data:", error);
       navigate("/");
     }
   };

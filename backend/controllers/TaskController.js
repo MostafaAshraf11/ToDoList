@@ -32,7 +32,6 @@ async function addTask(req, res) {
       task: createdTask,
     });
   } catch (error) {
-    console.error("Error adding task:", error);
     res.status(500).json({
       message: "Error adding task",
       error: error.message || "Unknown error occurred",
@@ -70,7 +69,6 @@ async function getTask(req, res) {
       task,
     });
   } catch (error) {
-    console.error("Error removing task:", error);
     res.status(500).json({
       message: "Error removing task",
       error: error.message || "Unknown error occurred",
@@ -126,7 +124,6 @@ async function searchTasks(req, res) {
       tasks: filteredTasks,
     });
   } catch (error) {
-    console.error("Error retrieving tasks:", error);
     res.status(500).json({
       message: "Error retrieving tasks",
       error: error.message || "Unknown error occurred",
@@ -163,7 +160,6 @@ async function removeTask(req, res) {
       message: "Task removed successfully",
     });
   } catch (error) {
-    console.error("Error removing task:", error);
     res.status(500).json({
       message: "Error removing task",
       error: error.message || "Unknown error occurred",
@@ -176,8 +172,6 @@ async function updateTask(req, res) {
     const id = req.body.id;
     const taskId = req.body.taskId;
     const { title, description, status, dueDate } = req.body;
-
-    console.log(id, taskId, title, description, status, dueDate);
 
     if (!taskId) {
       return res
@@ -195,9 +189,6 @@ async function updateTask(req, res) {
     if (description) updateFields["toDoList.$.description"] = description;
     if (status) updateFields["toDoList.$.status"] = status;
     if (dueDate) updateFields["toDoList.$.dueDate"] = dueDate;
-
-    console.log(updateFields);
-    console.log(id, taskId);
 
     if (Object.keys(updateFields).length === 0) {
       return res
@@ -218,7 +209,6 @@ async function updateTask(req, res) {
       message: "Task updated successfully",
     });
   } catch (error) {
-    console.error("Error updating task:", error);
     res.status(500).json({
       message: "Error removing task",
       error: error.message || "Unknown error occurred",

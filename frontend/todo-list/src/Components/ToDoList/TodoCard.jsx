@@ -28,7 +28,6 @@ const TodoCard = ({ card, onDelete, onSave, isEditable }) => {
       if (result) {
         toast.success("Task updated successfully!");
       } else {
-        console.log("No change to task, no update necessary.");
       }
     } catch (error) {
       toast.error("Could not update the task. Please try again.");
@@ -54,7 +53,6 @@ const TodoCard = ({ card, onDelete, onSave, isEditable }) => {
       if (result) {
         toast.success("Task status updated successfully!");
       } else {
-        console.log("No change to task status, no update necessary.");
       }
     } catch (error) {
       toast.error("Could not update task status. Please try again.");

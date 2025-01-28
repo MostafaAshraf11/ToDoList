@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import TodoCard from "./TodoCard";
 import styles from "./TodoApp.module.css";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast"; // Importing react-hot-toast
 import {
   fetchTasksDetails,
   addTask,
   removeTask,
 } from "../../services/todoService";
+
 const TodoApp = () => {
   const [todos, setTodos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,36 +22,40 @@ const TodoApp = () => {
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
         if (!userId || !token) {
+          //toast.error("token expired. Redirecting to login...");
           navigate("/");
+          return;
         }
+
         const fetchData = { search: searchQuery, status: selectedFilters[0] };
         const res = await fetchTasksDetails(userId, fetchData);
+
+        if (!(res.message === "Tasks retrieved successfully")) {
+          navigate("/");
+          return;
+        }
+
         setTodos(res.tasks);
       } catch (error) {
-        console.error("Error fetching task details:", error.message);
         navigate("/");
       }
     };
+
     fetchData();
-  }, [searchQuery, selectedFilters]); // Runs whenever searchQuery or selectedFilters change
+  }, [searchQuery, selectedFilters, navigate]);
 
-  // Search and Filter logic
-
-  // Toggle filter logic for checkboxes
   const toggleFilter = (value) => {
     setSelectedFilters((prev) => {
-      // If the checkbox is already selected, uncheck it (clear the filter)
       if (prev.includes(value)) {
         return [];
       }
-      // Otherwise, set the selected filter to only this value
       return [value];
     });
   };
 
-  // Add a new todo as the first item in the list
   const handleAddTodo = () => {
-    if (todos.length != 0 && todos[0].isNew) {
+    if (todos.length !== 0 && todos[0].isNew) {
+      toast("You are already adding a new task!", { icon: "⚠️" });
       return;
     }
     const newTodo = {
@@ -58,39 +64,49 @@ const TodoApp = () => {
       description: "",
       status: "pending",
       dueDate: "",
-      isNew: true, // Flag to indicate a newly added item
+      isNew: true,
     };
     const updatedTodos = [newTodo, ...todos];
     setTodos(updatedTodos);
+    toast("New task added! Fill out the details and save.", { icon: "📝" });
   };
 
-  // Delete and Save handlers for cards
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const updatedTodos = todos.filter((todo) => todo._id !== id);
     setTodos(updatedTodos);
 
-    //api call
-    const deletedTodo = todos.filter((todo) => todo._id === id);
-    if (deletedTodo[0].isNew) {
+    const deletedTodo = todos.find((todo) => todo._id === id);
+    if (deletedTodo.isNew) {
+      toast("Unsaved task deleted.", { icon: "🗑️" });
       return;
     }
     const userId = localStorage.getItem("userId");
 
-    removeTask(userId, id);
+    try {
+      await removeTask(userId, id);
+      toast.success("Task deleted successfully!");
+    } catch (error) {
+      toast.error("Error deleting task. Please try again.");
+    }
   };
 
   const handleSave = async (updatedCard) => {
-    //api call
-    console.log("updatedcards", updatedCard);
     const userId = localStorage.getItem("userId");
-    const result = await addTask(userId, updatedCard);
-    const updatedTodos = [...todos];
-    updatedTodos[0] = result.task;
-    setTodos(updatedTodos);
+    try {
+      const result = await addTask(userId, updatedCard);
+      const updatedTodos = [...todos];
+      updatedTodos[0] = result.task;
+      setTodos(updatedTodos);
+      toast.success("Task saved successfully!");
+    } catch (error) {
+      toast.error("Error saving task. Please try again.");
+    }
   };
+
   return (
     <div className={styles.todoApp}>
-      {/* Unified Search and Filter Form */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       <form className={styles.searchForm}>
         {/* Search Field */}
         <input
@@ -101,7 +117,6 @@ const TodoApp = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        {/* Checkbox Filters */}
         <div className={styles.filterOptions}>
           <label>
             <input
@@ -124,7 +139,6 @@ const TodoApp = () => {
         </div>
       </form>
 
-      {/* Add Component Button */}
       <button onClick={handleAddTodo} className={styles.addButton}>
         Add Task
       </button>
