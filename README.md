@@ -73,7 +73,6 @@ The application should now be running with:
 - React
 - React Router DOM
 - Axios
-- JWT Decode
 
 ## Features
 - User authentication (signup/login)

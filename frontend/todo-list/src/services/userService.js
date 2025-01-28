@@ -54,7 +54,7 @@ export const updateUser = async (userId, userData) => {
   }
 };
 
-// Delete user function
+
 export const deleteUser = async (userId) => {
   try {
     const token = localStorage.getItem("token");
@@ -64,7 +64,7 @@ export const deleteUser = async (userId) => {
       },
     });
 
-    // Clear local storage if user deletes their own account
+
     if (userId === localStorage.getItem("userId")) {
       localStorage.removeItem("token");
       localStorage.removeItem("userId");

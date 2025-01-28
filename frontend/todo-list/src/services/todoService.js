@@ -5,7 +5,7 @@ export const fetchTasksDetails = async (
   { search = "", status = "", page = 1, limit = 10 } = {}
 ) => {
   try {
-    // Build the query string dynamically
+    
     const queryParams = new URLSearchParams({
       id: userId,
       page: page.toString(),
@@ -22,11 +22,13 @@ export const fetchTasksDetails = async (
 
     const url = `http://localhost:5000/task/search?${queryParams.toString()}`;
 
+    const token = localStorage.getItem("token");
+
     const response = await axios.get(url);
 
     if (response.status === 200) {
       console.log("Tasks retrieved successfully:", response.data);
-      return response.data; // Return the retrieved data for further use
+      return response.data; 
     } else {
       console.error("Failed to retrieve tasks:", response.statusText);
       return null;
@@ -78,7 +80,7 @@ export const updateTask = async (
     });
     const url = "http://localhost:5000/task/edit";
 
-    // Create the request body
+    
     const body = {
       id: userId,
       taskId: taskId,
@@ -88,15 +90,15 @@ export const updateTask = async (
       dueDate,
     };
 
-    // Send PUT request to update the task
+    
     const response = await axios.put(url, body);
 
     if (response.status === 200) {
       console.log("Task updated successfully:", response.data);
-      return response.data; // Return the updated task response
+      return response.data; 
     } else {
       console.error("Failed to update task:", response.statusText);
-      return null; // Return null if update fails
+      return null;
     }
   } catch (error) {
     console.error("Error updating task:", error.message);
