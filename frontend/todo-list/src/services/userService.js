@@ -87,9 +87,12 @@ export const deleteUser = async (userId) => {
 
 export async function getUserDataById(id) {
   try {
-    console.log(id);
+    const token = localStorage.getItem("token");
     const response = await axios.get(`${API_BASE_URL}/getDetails?id=${id}`, {
       params: { id },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     console.log("Fetched user data:", response.data);
     return response.data; // Return the fetched user data

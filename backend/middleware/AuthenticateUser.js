@@ -9,7 +9,6 @@ function authenticateUser(req, res, next) {
     token =token.split(" ")[1];
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
-    console.log("verified");
     next();
   } catch (err) {
     console.log(err);

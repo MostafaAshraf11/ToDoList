@@ -15,7 +15,7 @@ router.post("/register", register);
 
 router.post("/login", login);
 
-router.get("/getDetails",getUserById);
+router.get("/getDetails",authenticateUser,getUserById);
 router.put("/update",updateUser);
 
 router.delete("/delete", deleteUser);

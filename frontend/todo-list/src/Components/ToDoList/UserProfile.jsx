@@ -10,9 +10,9 @@ import {
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phoneNumber: "123-456-7890",
+    name: "",
+    email: "",
+    phoneNumber: "",
     password: "*********", // Default value for password when in read-only mode
   });
 
@@ -84,17 +84,15 @@ const UserProfile = () => {
         const userId = localStorage.getItem("userId");
 
         if (!userId) {
-          console.error("No user ID found in localStorage");
           navigate('/');
           return;
         }
 
         const res = await getUserDataById(userId);
-        console.log(res);
-
         setUser({ ...res, password: "" });
       } catch (error) {
         console.error("Error fetching user data:", error);
+        navigate('/');
       }
     };
 
