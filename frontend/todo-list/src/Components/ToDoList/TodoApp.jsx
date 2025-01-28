@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TodoCard from "./TodoCard";
 import styles from "./TodoApp.module.css";
+import { useNavigate } from "react-router-dom";
 import {
   fetchTasksDetails,
   addTask,
@@ -11,7 +12,7 @@ const TodoApp = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
 
-  let debounceTimeout;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,17 +23,10 @@ const TodoApp = () => {
         setTodos(res.tasks);
       } catch (error) {
         console.error("Error fetching task details:", error.message);
+        navigate("/");
       }
     };
-
-    // Clear previous debounce timeout to reset the delay
-    clearTimeout(debounceTimeout);
-
-    // Set a new timeout to delay the API call
-    debounceTimeout = setTimeout(fetchData, 500); // Adjust the delay as necessary (e.g., 500ms)
-
-    // Cleanup function to clear the timeout when the component unmounts or dependencies change
-    return () => clearTimeout(debounceTimeout);
+    fetchData();
   }, [searchQuery, selectedFilters]); // Runs whenever searchQuery or selectedFilters change
 
   // Search and Filter logic
@@ -69,12 +63,18 @@ const TodoApp = () => {
     setTodos(updatedTodos);
 
     //api call
+    const deletedTodo = todos.filter((todo) => todo._id === id);
+    if (deletedTodo[0].isNew) {
+      return;
+    }
     const userId = localStorage.getItem("userId");
+
     removeTask(userId, id);
   };
 
   const handleSave = async (updatedCard) => {
     //api call
+    console.log("updatedcards", updatedCard);
     const userId = localStorage.getItem("userId");
     const result = await addTask(userId, updatedCard);
     const updatedTodos = [...todos];
@@ -119,7 +119,7 @@ const TodoApp = () => {
 
       {/* Add Component Button */}
       <button onClick={handleAddTodo} className={styles.addButton}>
-        Add Component
+        Add Task
       </button>
 
       {/* Displaying filtered todo cards in a grid layout */}

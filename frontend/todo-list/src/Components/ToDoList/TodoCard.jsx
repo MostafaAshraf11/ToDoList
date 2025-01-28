@@ -32,6 +32,9 @@ const TodoCard = ({ card, onDelete, onSave, isEditable }) => {
     });
 
     //call the api
+    if (card.isNew) {
+      return;
+    }
     const userId = localStorage.getItem("userId");
     updateTask(userId, updatedCard._id, {
       ...updatedCard,

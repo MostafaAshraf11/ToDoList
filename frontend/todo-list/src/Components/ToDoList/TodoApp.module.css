@@ -3,7 +3,7 @@
     padding: 2rem 0;
     width: 100%;
     box-sizing: border-box;
-    background: url('../Assets/watercolor-light-steel-blue-wallpaper-image.jpg') no-repeat center center fixed;
+    background: url('../Assets/background.jpg') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh; /* Ensure the background always covers the entire viewport */
     display: flex;

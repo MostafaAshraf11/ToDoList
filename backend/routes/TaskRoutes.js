@@ -16,7 +16,7 @@ router.post("/add", addTask);
 
 router.get("/select", getTask);
 
-router.get("/search", searchTasks);
+router.get("/search", authenticateUser, searchTasks);
 
 router.delete("/remove", removeTask);
 

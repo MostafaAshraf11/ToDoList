@@ -2,7 +2,7 @@ const User = require("../models/UserSchema");
 
 async function addTask(req, res) {
   try {
-    const { title, description, dueDate } = req.body;
+    const { title, description, dueDate, status } = req.body;
     const id = req.query.id;
     if (!id) {
       return res
@@ -18,7 +18,7 @@ async function addTask(req, res) {
     const newTask = {
       title,
       description,
-      status: "pending", // Default to 'pending' if not provided
+      status: status, // Default to 'pending' if not provided
       dueDate: dueDate ? dueDate : Date.now(),
     };
 
